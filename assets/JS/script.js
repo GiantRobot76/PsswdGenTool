@@ -147,11 +147,26 @@ function buildArray(p1, p2, p3, p4) {
   return returnArray;
 }
 
+//generate remainder of password
+function generatePassword(chars, array1, array2) {
+  returnArray = array1;
+  solutionArray = array2;
+
+  //append items from solution array to returnArray until no required characters remain
+  for (let i = chars; i > 0; i--) {
+    //for all remaining characters, generate a random index and append corresponding item from solutionArray
+    randNum = Math.floor(Math.random() * (solutionArray.length - 1));
+    returnArray.push(solutionArray[randNum]);
+  }
+
+  return returnArray;
+}
+
 // Write password to the #password input
 function writePassword() {
   //add variables to store prompted user input
   var numChars = prompt(
-    "How Many Chatacters? (must be integer between 8 and 128"
+    "How Many Characters? (must be integer between 8 and 128"
   );
   var includeLow = prompt("Include at Least One Lowercase Character? (y/n)");
   var includeUp = prompt("Include at Least One Uppercase Character? (y/n)");
@@ -175,10 +190,22 @@ function writePassword() {
     includeSpec
   );
 
-  // var password = generatePassword();
-  // var passwordText = document.querySelector("#password");
+  //Calculate number of characters we still need to generate after initial seed
+  var remainingChars = numChars - initialString.length;
 
-  // passwordText.value = password;
+  //generate remainder of password based on characters remaining, initial seed, and array of requested characters
+  var password = generatePassword(
+    remainingChars,
+    initialString,
+    possibleCharacters
+  );
+
+  console.log(password);
+
+  var passwordText = document.querySelector("#password");
+
+  //write result to window. Use .join() to remove commas between array elements
+  passwordText.value = password.join("");
 }
 
 // Add event listener to generate button
