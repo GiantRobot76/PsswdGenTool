@@ -184,6 +184,17 @@ function writePassword() {
       "Include at Least One Special Character? Ok for Yes, Cancel for No."
     );
 
+    //Check to see if user has excluded all character types
+    if (
+      includeLow === false &&
+      includeUp === false &&
+      includeNum === false &&
+      includeSpec === false
+    ) {
+      alert("Must Include at Least One Character Type");
+      return;
+    }
+
     //Seed initial String with 1 Instance of each type of special Character
     var initialString = seedString(
       includeLow,
@@ -218,7 +229,13 @@ function writePassword() {
     //write result to window. Use .join() to remove commas between array elements
     passwordText.value = password.join("");
   } else {
-    writePassword();
+    if (numChars < 8) {
+      alert("Length Must be At Least 8 Characters");
+      return;
+    } else {
+      alert("Length Must be No More than 128 Characters");
+    }
+    return;
   }
 }
 
