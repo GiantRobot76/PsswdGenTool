@@ -97,23 +97,23 @@ var specialCharacters = [
 //Seeds password with 1 character of each requested type to ensure criteria are met
 function seedString(p1, p2, p3, p4) {
   returnArray = [];
-  if (p1 === "y") {
+  if (p1) {
     //generate random integer between 0 and the max index in the array
     randNum = Math.floor(Math.random() * (lowercase.length - 1));
     returnArray.push(lowercase[randNum]);
   }
 
-  if (p2 === "y") {
+  if (p2) {
     randNum = Math.floor(Math.random() * (uppercase.length - 1));
     returnArray.push(uppercase[randNum]);
   }
 
-  if (p3 === "y") {
+  if (p3) {
     randNum = Math.floor(Math.random() * (numberArray.length - 1));
     returnArray.push(numberArray[randNum]);
   }
 
-  if (p4 === "y") {
+  if (p4) {
     randNum = Math.floor(Math.random() * (specialCharacters.length - 1));
     returnArray.push(specialCharacters[randNum]);
   }
@@ -124,22 +124,22 @@ function seedString(p1, p2, p3, p4) {
 //creates array of all requested character types to use in completion of password
 function buildArray(p1, p2, p3, p4) {
   returnArray = [];
-  if (p1 === "y") {
+  if (p1) {
     //Append Array of Lowercase Cahracters
     returnArray = returnArray.concat(lowercase);
   }
 
-  if (p2 === "y") {
+  if (p2) {
     //Append Array of Uppercase Characters
     returnArray = returnArray.concat(uppercase);
   }
 
-  if (p3 === "y") {
+  if (p3) {
     //Append Array of numbers
     returnArray = returnArray.concat(numberArray);
   }
 
-  if (p4 === "y") {
+  if (p4) {
     //Append Array of special characters
     returnArray = returnArray.concat(specialCharacters);
   }
@@ -168,44 +168,58 @@ function writePassword() {
   var numChars = prompt(
     "How Many Characters? (must be integer between 8 and 128"
   );
-  var includeLow = prompt("Include at Least One Lowercase Character? (y/n)");
-  var includeUp = prompt("Include at Least One Uppercase Character? (y/n)");
-  var includeNum = prompt("Include at Least One Number? (y/n)");
-  var includeSpec = prompt("Include at Least One Special Character? (y/n)");
 
-  //Seed initial String with 1 Instance of each type of special Character
-  var initialString = seedString(
-    includeLow,
-    includeUp,
-    includeNum,
-    includeSpec
-  );
+  /*Check to see if input # of characters is in range. If not, recusively call function to start again*/
+  if (numChars >= 8 && numChars <= 128) {
+    var includeLow = confirm(
+      "Include at Least One Lowercase Character? Ok for Yes, Cancel for No"
+    );
+    var includeUp = confirm(
+      "Include at Least One Uppercase Character? Ok for Yes, Cancel for No"
+    );
+    var includeNum = confirm(
+      "Include at Least One Number? Ok for Yes, Cancel for No"
+    );
+    var includeSpec = confirm(
+      "Include at Least One Special Character? Ok for Yes, Cancel for No."
+    );
 
-  //Build an array of all data types requested for remaining password
+    //Seed initial String with 1 Instance of each type of special Character
+    var initialString = seedString(
+      includeLow,
+      includeUp,
+      includeNum,
+      includeSpec
+    );
 
-  var possibleCharacters = buildArray(
-    includeLow,
-    includeUp,
-    includeNum,
-    includeSpec
-  );
+    //Build an array of all data types requested for remaining password
 
-  //Calculate number of characters we still need to generate after initial seed
-  var remainingChars = numChars - initialString.length;
+    var possibleCharacters = buildArray(
+      includeLow,
+      includeUp,
+      includeNum,
+      includeSpec
+    );
 
-  //generate remainder of password based on characters remaining, initial seed, and array of requested characters
-  var password = generatePassword(
-    remainingChars,
-    initialString,
-    possibleCharacters
-  );
+    //Calculate number of characters we still need to generate after initial seed
+    var remainingChars = numChars - initialString.length;
 
-  console.log(password);
+    //generate remainder of password based on characters remaining, initial seed, and array of requested characters
+    var password = generatePassword(
+      remainingChars,
+      initialString,
+      possibleCharacters
+    );
 
-  var passwordText = document.querySelector("#password");
+    console.log(password);
 
-  //write result to window. Use .join() to remove commas between array elements
-  passwordText.value = password.join("");
+    var passwordText = document.querySelector("#password");
+
+    //write result to window. Use .join() to remove commas between array elements
+    passwordText.value = password.join("");
+  } else {
+    writePassword();
+  }
 }
 
 // Add event listener to generate button
